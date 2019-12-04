@@ -60,7 +60,7 @@ public class LibrarySystem {
 	private JTextField returnBookFineField;
 	private JTextField issueDateField;
 	private JTextField ReturnPayFineField;
-	private JPasswordField regPwdField;
+	private JPasswordField pwdFieldReg;
 	private JPasswordField issuePasswordField;
 
 	/**
@@ -259,26 +259,22 @@ private void main_menu(String username) {
 
 private void register() {
     r_frame = new JFrame("Register member");
-	r_frame.setBounds(0, 0, 512, 720);
     r_frame.setVisible(true);
-    r_frame.setSize(340, 450); 
-	r_frame.getContentPane().setLayout(null);
-	
     JLabel Name = new JLabel("Name");
-    Name.setBounds(30, 94, 46, 14);
+    Name.setBounds(84, 94, 46, 14);
     r_frame.getContentPane().add(Name);
 
     JLabel ID = new JLabel("Id");
-    ID.setBounds(30, 141, 46, 14);
+    ID.setBounds(84, 141, 46, 14);
     r_frame.getContentPane().add(ID);
 
     memberName = new JTextField();
-    memberName.setBounds(90, 94, 123, 20);
+    memberName.setBounds(173, 94, 123, 20);
     r_frame.getContentPane().add(memberName);
     memberName.setColumns(10);
 
     memberID = new JTextField();
-    memberID.setBounds(90, 138, 123, 20);
+    memberID.setBounds(173, 138, 123, 20);
     r_frame.getContentPane().add(memberID);
     memberID.setColumns(10);
 
@@ -287,7 +283,7 @@ private void register() {
     r_frame.getContentPane().add(lblNewLabel_3);
 
     JLabel Type = new JLabel("Type");
-    Type.setBounds(30, 201, 46, 14);
+    Type.setBounds(84, 201, 46, 14);
     r_frame.getContentPane().add(Type);
 
     String[] user_roles = { "Admin", "Librarian", "Instructor", "Student", "Others" };
@@ -314,7 +310,7 @@ private void register() {
                 validEmail = false;
             }
 
-            if (!(regPwdField.getText().length() > 6)) {
+            if (!(pwdFieldReg.getText().length() > 6)) {
                 validPassword = false;
             }
 
@@ -327,7 +323,7 @@ private void register() {
             }
             
             DemoMember member = new DemoMember("ABC", memberID.getText(), memberTypeId,
-            regPwdField.getText(), "ABC");
+            pwdFieldReg.getText(), "ABC");
 
             
 
@@ -341,7 +337,7 @@ private void register() {
                 JOptionPane.showMessageDialog(null, "enter a valid email ");
 
             } else if (validEntry && !validPassword) {
-                regPwdField.setText("");
+                pwdFieldReg.setText("");
                 JOptionPane.showMessageDialog(null, "enter a strong password ");
 
             }
@@ -354,22 +350,24 @@ private void register() {
     
 
     JLabel lblEmail = new JLabel("Email");
-    lblEmail.setBounds(30, 275, 46, 14);
+    lblEmail.setBounds(84, 275, 46, 14);
     r_frame.getContentPane().add(lblEmail);
     
     
     txtFieldRegEmail = new JTextField();
-    txtFieldRegEmail.setBounds(90, 272, 200, 20);
+    txtFieldRegEmail.setBounds(173, 272, 123, 20);
     r_frame.getContentPane().add(txtFieldRegEmail);
     txtFieldRegEmail.setColumns(10);
 
     JLabel lblRegPwd = new JLabel ("Password");
-    lblRegPwd.setBounds(30, 321, 64, 14);
+    lblRegPwd.setBounds(84, 321, 64, 14);
     r_frame.getContentPane().add(lblRegPwd);
-    
-    regPwdField = new JPasswordField();
-	regPwdField.setBounds(90, 318, 124, 20);
-	r_frame.getContentPane().add(regPwdField);
+
+
+    pwdFieldReg = new JPasswordField();
+    pwdFieldReg.setBounds(173, 318, 123, 20);
+    r_frame.getContentPane().add(pwdFieldReg);
+    pwdFieldReg.setText("ABC");
 
     
 }
@@ -379,30 +377,24 @@ private void issue_book() {
     i_frame = new JFrame("Issue Book");
     i_frame.setVisible(true);
 	i_frame.setBounds(0, 0, 1024, 720);
-	i_frame.setSize(400, 400); 
+	frame.setSize(250, 250); 
 	i_frame.getContentPane().setLayout(null);
-	
-	JLabel lblBookIssue = new JLabel("Welcome to Library Book Issue!");
-	lblBookIssue.setFont(new Font("Times New Roman", Font.BOLD, 18));
-	lblBookIssue.setBounds(10, 30, 400, 63);
+	JLabel lblBookIssue = new JLabel("Book Issue");
+	lblBookIssue.setBounds(455, 70, 94, 63);
 	i_frame.getContentPane().add(lblBookIssue);
 
-	JLabel label = new JLabel("User ID");
-	label.setBounds(10, 128, 46, 14);
+	JLabel label = new JLabel("Id");
+	label.setBounds(349, 128, 46, 14);
 	i_frame.getContentPane().add(label);
 
 	issueMemberIDField = new JTextField();
 	issueMemberIDField.setColumns(10);
-	issueMemberIDField.setBounds(90, 125, 86, 20);
+	issueMemberIDField.setBounds(465, 125, 86, 20);
 	i_frame.getContentPane().add(issueMemberIDField);
 
 	JLabel label_1 = new JLabel("Password");
-	label_1.setBounds(10, 175, 64, 14);
+	label_1.setBounds(349, 175, 64, 14);
 	i_frame.getContentPane().add(label_1);
-    
-    issuePasswordField = new JPasswordField();
-	issuePasswordField.setBounds(90, 172, 84, 20);
-	i_frame.getContentPane().add(issuePasswordField);
 
 	JList<String> list_2 = new JList();
 	list_2.setSelectedIndices(new int[] { 0 });
@@ -419,11 +411,11 @@ private void issue_book() {
 	});
 
 	list_2.setSelectedIndex(0);
-	list_2.setBounds(90, 215, 180, 77);
+	list_2.setBounds(465, 215, 180, 77);
 	i_frame.getContentPane().add(list_2);
 
 	JLabel lblBook = new JLabel("Book");
-	lblBook.setBounds(10, 227, 46, 14);
+	lblBook.setBounds(349, 227, 46, 14);
 	i_frame.getContentPane().add(lblBook);
 
 	JButton btnNewIssue = new JButton("Issue");
@@ -515,21 +507,23 @@ private void issue_book() {
 
 		}
 	});
-	btnNewIssue.setBounds(90, 360, 89, 23);
+	btnNewIssue.setBounds(441, 360, 89, 23);
 	i_frame.getContentPane().add(btnNewIssue);
-	
 	issueDateField = new JTextField();
-	issueDateField.setBounds(90, 303, 86, 20);
+	issueDateField.setBounds(491, 303, 86, 20);
 	i_frame.getContentPane().add(issueDateField);
 	issueDateField.setColumns(10);
-	issueDateField.setText("MM/dd/yyyy");
 
-	JLabel lblNewLabel_4 = new JLabel("Issue Date");
-	lblNewLabel_4.setBounds(10, 291, 138, 47);
+	JLabel lblNewLabel_4 = new JLabel("Issue Date\r\n(MM/dd/yyyy)");
+	lblNewLabel_4.setBounds(349, 291, 138, 47);
 	i_frame.getContentPane().add(lblNewLabel_4);
-    
+	issuePasswordField = new JPasswordField();
+	issuePasswordField.setBounds(465, 172, 84, 20);
+	i_frame.getContentPane().add(issuePasswordField);
 	
-	
+	JLabel lblNewLabel_1 = new JLabel ("Password");
+	lblNewLabel_1.setBounds(84, 321, 64, 14);
+	i_frame.getContentPane().add(lblNewLabel_1);
 	
 }
 
@@ -540,41 +534,21 @@ private void return_book() {
 	return_frame.pack();
 	return_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	return_frame.getContentPane().setLayout(null);
-    
 	JLabel lblBookReturn = new JLabel("Book Return");
-	lblBookReturn.setBounds(50, 33, 74, 14);
+	lblBookReturn.setBounds(787, 33, 74, 14);
 	return_frame.getContentPane().add(lblBookReturn);
 
 	JLabel lblBook_1 = new JLabel("Book");
-	lblBook_1.setBounds(10, 97, 46, 14);
+	lblBook_1.setBounds(710, 97, 46, 14);
 	return_frame.getContentPane().add(lblBook_1);
 
 	JLabel lblMemberId = new JLabel("Member ID");
-	lblMemberId.setBounds(10, 171, 61, 14);
+	lblMemberId.setBounds(710, 171, 61, 14);
 	return_frame.getContentPane().add(lblMemberId);
-    
-    returnMemberIDField = new JTextField();
-	returnMemberIDField.setBounds(90, 163, 86, 20);
-	return_frame.getContentPane().add(returnMemberIDField);
-	returnMemberIDField.setColumns(10);
 
 	JLabel lblFine = new JLabel("Fine");
-	lblFine.setBounds(10, 201, 46, 14);
+	lblFine.setBounds(710, 201, 46, 14);
 	return_frame.getContentPane().add(lblFine);
-    
-    returnBookFineField = new JTextField();
-	returnBookFineField.setBounds(150, 200, 86, 20);
-	return_frame.getContentPane().add(returnBookFineField);
-	returnBookFineField.setColumns(10);
-    
-    JLabel lblNewLabel_5 = new JLabel("Pay Fine");
-	lblNewLabel_5.setBounds(10, 318, 61, 14);
-	return_frame.getContentPane().add(lblNewLabel_5);
-
-	ReturnPayFineField = new JTextField();
-	ReturnPayFineField.setBounds(150, 318, 86, 20);
-	return_frame.getContentPane().add(ReturnPayFineField);
-	ReturnPayFineField.setColumns(10);
 
 	JButton btnPayFine = new JButton("Pay Fine");
 	btnPayFine.addActionListener(new ActionListener() {
@@ -608,8 +582,18 @@ private void return_book() {
 
 		}
 	});
-	btnPayFine.setBounds(150, 360, 109, 23);
+	btnPayFine.setBounds(779, 360, 109, 23);
 	return_frame.getContentPane().add(btnPayFine);
+
+	returnMemberIDField = new JTextField();
+	returnMemberIDField.setBounds(840, 163, 86, 20);
+	frame.getContentPane().add(returnMemberIDField);
+	returnMemberIDField.setColumns(10);
+
+	returnBookFineField = new JTextField();
+	returnBookFineField.setBounds(840, 200, 86, 20);
+	frame.getContentPane().add(returnBookFineField);
+	returnBookFineField.setColumns(10);
 
 	JList<String> list_returnedBooks = new JList();
 	list_returnedBooks.setSelectedIndices(new int[] { 0 });
@@ -625,7 +609,7 @@ private void return_book() {
 		}
 	});
 	list_returnedBooks.setSelectedIndex(0);
-	list_returnedBooks.setBounds(90, 68, 128, 71);
+	list_returnedBooks.setBounds(840, 68, 128, 71);
 	return_frame.getContentPane().add(list_returnedBooks);
 
 	JButton btnReturnBook = new JButton("Return Book");
@@ -685,8 +669,16 @@ private void return_book() {
 		}
 
 	});
-	btnReturnBook.setBounds(150, 245, 109, 23);
+	btnReturnBook.setBounds(779, 245, 109, 23);
 	return_frame.getContentPane().add(btnReturnBook);
+	JLabel lblNewLabel_5 = new JLabel("Pay Fine");
+	lblNewLabel_5.setBounds(710, 318, 61, 14);
+	return_frame.getContentPane().add(lblNewLabel_5);
+
+	ReturnPayFineField = new JTextField();
+	ReturnPayFineField.setBounds(840, 318, 86, 20);
+	return_frame.getContentPane().add(ReturnPayFineField);
+	ReturnPayFineField.setColumns(10);
 	
 }
 

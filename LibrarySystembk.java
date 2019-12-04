@@ -555,7 +555,7 @@ private void return_book() {
     
     returnMemberIDField = new JTextField();
 	returnMemberIDField.setBounds(90, 163, 86, 20);
-	return_frame.getContentPane().add(returnMemberIDField);
+	frame.getContentPane().add(returnMemberIDField);
 	returnMemberIDField.setColumns(10);
 
 	JLabel lblFine = new JLabel("Fine");
@@ -564,7 +564,7 @@ private void return_book() {
     
     returnBookFineField = new JTextField();
 	returnBookFineField.setBounds(150, 200, 86, 20);
-	return_frame.getContentPane().add(returnBookFineField);
+	frame.getContentPane().add(returnBookFineField);
 	returnBookFineField.setColumns(10);
     
     JLabel lblNewLabel_5 = new JLabel("Pay Fine");
