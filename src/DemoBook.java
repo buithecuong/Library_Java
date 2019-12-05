@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DemoBook {
 	private int bookId;
@@ -23,11 +24,11 @@ public class DemoBook {
 		this.bookName = bookName;
 	}
 
-	public int getBookQunatity() {
+	public int getBookQuantity() {
 		return bookQuantity;
 	}
 
-	public void setBookQunatity(int bookQunatity) {
+	public void setBookQuantity(int bookQunatity) {
 		this.bookQuantity = bookQunatity;
 	}
 
@@ -94,7 +95,7 @@ public class DemoBook {
 				if (globalbook.getBookName().equals(book.getBookName()))
 
 				{
-					if (globalbook.getBookQunatity() <= 0) {
+					if (globalbook.getBookQuantity() <= 0) {
 						check = false;
 					}
 
@@ -112,7 +113,7 @@ public class DemoBook {
 			if (globalbook.getBookName().equals(issuedBook.getBookName()))
 
 			{
-				globalbook.setBookQunatity(globalbook.getBookQunatity() - 1);
+				globalbook.setBookQuantity(globalbook.getBookQuantity() - 1);
 			}
 
 		}
@@ -126,7 +127,7 @@ public class DemoBook {
 			if (globalbook.getBookName().equals(returnBook.getBookName()))
 
 			{
-				globalbook.setBookQunatity(globalbook.getBookQunatity() + 1);
+				globalbook.setBookQuantity(globalbook.getBookQuantity() + 1);
 
 			}
 

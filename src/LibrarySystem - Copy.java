@@ -22,9 +22,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -33,13 +30,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 public class LibrarySystem {
 
-	private JFrame frame, i_frame, r_frame,  return_frame, inv_frame;
+	private JFrame frame, i_frame, r_frame,  return_frame;
 	
 	// a label 
     private JLabel lbl; 
@@ -70,8 +64,6 @@ public class LibrarySystem {
 	private JTextField ReturnPayFineField;
 	private JPasswordField regPwdField;
 	private JPasswordField issuePasswordField;
-
-	private JTextField bookTitle, bookID, author, qty;
 	private static final String data_path = Paths.get("").toAbsolutePath().toString() + "\\db\\members.dat";
 
 	/**
@@ -224,8 +216,7 @@ private void main_menu(DemoMember user) {
     inv_menu.addActionListener(new ActionListener() { //Perform action
         public void actionPerformed(ActionEvent e){
              
-            //JOptionPane.showMessageDialog(null,"Inventory menu!"); //Open a dialog box and display the message
-        	inventory();
+            JOptionPane.showMessageDialog(null,"Inventory menu!"); //Open a dialog box and display the message
              
         }
     });
@@ -302,122 +293,14 @@ private void main_menu(DemoMember user) {
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.getContentPane().setLayout(null);
 
-	/*JLabel lblNewLabel = new JLabel("Welome " + role_str + " " + user.getMemberName().toUpperCase() + " TO LIBRARY!");
+	JLabel lblNewLabel = new JLabel("Welome " + role_str + " " + user.getMemberName().toUpperCase() + " TO LIBRARY!");
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 	lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
 	lblNewLabel.setBounds(349, 0, 600, 77);
-	frame.getContentPane().add(lblNewLabel);*/
-	if(user_role != 0) {
-		String [] columns = {"ID","Title","Author"};
-		
-		List<String[]> values = new ArrayList<String[]>();
-		
-	    
-	    for (DemoBook book : bookList) {
-			values.add(new String[] {String.valueOf(book.getBookId()), book.getBookName(),book.getBookAuthor()});
-		}
-		
-		
-	    TableModel tableModel = new DefaultTableModel(values.toArray(new Object[][] {}), columns);
-	    JTable table = new JTable(tableModel);
-	    frame.setLayout(new BorderLayout());
-	    table.setBounds(0, 100, 300, 300);
-	    
-	    frame.add(new JScrollPane(table), BorderLayout.CENTER);
-	
-	    frame.add(table.getTableHeader(), BorderLayout.NORTH);
-	
-	    frame.setVisible(true);
-	    frame.setSize(400,200);
-	}
+	frame.getContentPane().add(lblNewLabel);
+
 	
 
-}
-
-private void inventory() {
-    inv_frame = new JFrame("Book Inventory");
-    inv_frame.setBounds(0, 0, 512, 720);
-    inv_frame.setVisible(true);
-    inv_frame.setSize(340, 450); 
-    inv_frame.getContentPane().setLayout(null);
-	
-	JLabel lblTitle = new JLabel("Title");
-	lblTitle.setBounds(10, 30, 46, 14);
-    inv_frame.getContentPane().add(lblTitle);
-    
-    JLabel lblID = new JLabel("Book ID");
-    lblID.setBounds(10, 50, 46, 14);
-    inv_frame.getContentPane().add(lblID);
-    
-    
-    JLabel lblAuthor = new JLabel("Author");
-    lblAuthor.setBounds(10, 90, 46, 14);
-    inv_frame.getContentPane().add(lblAuthor);
-    
-    JLabel lblqty = new JLabel("Qty");
-    lblqty.setBounds(10, 120, 46, 14);
-    inv_frame.getContentPane().add(lblqty);
-    
-    bookTitle = new JTextField();
-    bookTitle.setBounds(90, 40, 123, 20);
-    inv_frame.getContentPane().add(bookTitle);
-    bookTitle.setColumns(10);
-    bookID = new JTextField();
-    bookID.setBounds(90, 60, 123, 20);
-    inv_frame.getContentPane().add(bookID);
-    bookID.setColumns(10);
-
-    author = new JTextField();
-    author.setBounds(90, 95, 123, 20);
-    inv_frame.getContentPane().add(author);
-    author.setColumns(10);
-    
-    qty = new JTextField();
-    qty.setBounds(90, 130, 123, 20);
-    inv_frame.getContentPane().add(qty);
-    qty.setColumns(10);
-
-    String[] actions = { "Add", "Update", "Remove" };
-
-    
-    final JComboBox<String> actionList = new JComboBox<String>(actions);
-    actionList.setBounds(90, 201, 123, 20);
-
-    actionList.setVisible(true);
-    inv_frame.getContentPane().add(actionList);
-    
-    
-    JButton btn_inv = new JButton("Inventory");
-    btn_inv.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-            
-        	DemoBook book = new DemoBook( bookTitle.getText(), Integer.parseInt(qty.getText()),  author.getText(), Integer.parseInt(bookID.getText()));
-            //DemoBook DemoBook = new DemoBook("Business", 2, "Cj", 100);
-        	String action = (String) actionList.getSelectedItem();
-            switch(action) 
-            { 
-                case "Add": 
-                	bookList.add(book);  
-                	JOptionPane.showMessageDialog(null,"Add books successfully!"); //Open a dialog box and display the message
-                    break; 
-                case "Remove": 
-                	bookList.remove(bookList.indexOf(book));
-                	JOptionPane.showMessageDialog(null,"Remove books successfully!"); //Open a dialog box and display the message
-                    break; 
-                default: 
-                	JOptionPane.showMessageDialog(null,"Action " + action + " is not ready for use!"); //Open a dialog box and display the message
-            } 
-        	      
-
-            
-        }
-    });
-    btn_inv.setBounds(122, 360, 89, 23);
-    inv_frame.getContentPane().add(btn_inv);
-    
-    
-    
-    
 }
 
 
@@ -479,6 +362,7 @@ private void register() {
             }
             
             String select_role = (String) roleList.getSelectedItem();
+            System.out.println(select_role);
             switch(select_role) 
             { 
                 case "Admin": 
@@ -558,20 +442,17 @@ private void issue_book(DemoMember returnMember) {
     i_frame = new JFrame("Issue Book");
     i_frame.setVisible(true);
 	i_frame.setBounds(0, 0, 1024, 720);
-	i_frame.setSize(400, 450); 
+	i_frame.setSize(400, 400); 
 	i_frame.getContentPane().setLayout(null);
 	
 	JLabel lblBookIssue = new JLabel("Welcome to Library Book Issue!");
 	lblBookIssue.setFont(new Font("Times New Roman", Font.BOLD, 18));
 	lblBookIssue.setBounds(10, 30, 400, 63);
 	i_frame.getContentPane().add(lblBookIssue);
-    
-	String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
-	
-	
-	/*JList<String> list_2 = new JList();
+
+	JList<String> list_2 = new JList();
 	list_2.setSelectedIndices(new int[] { 0 });
-	
+	String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
 	list_2.setModel(new AbstractListModel() {
 		public int getSize() {
 			return values.length;
@@ -581,25 +462,14 @@ private void issue_book(DemoMember returnMember) {
 			return values[index];
 		}
 	});
+
 	list_2.setSelectedIndex(0);
-	
+	list_2.setBounds(90, 80, 180, 77);
 	i_frame.getContentPane().add(list_2);
-	*/
-	
-	JPanel panel = new JPanel(new BorderLayout());
-    final JList<String> list = new JList<String>(values);
-    JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setViewportView(list);
-    list.setLayoutOrientation(JList.VERTICAL);
-    panel.add(scrollPane);
-    panel.setBounds(10, 80, 350, 180);
-    i_frame.add(panel);
 
-	
-
-	/*JLabel lblBook = new JLabel("Book");
+	JLabel lblBook = new JLabel("Book");
 	lblBook.setBounds(10, 140, 46, 14);
-	i_frame.getContentPane().add(lblBook);*/
+	i_frame.getContentPane().add(lblBook);
 
 	JButton btnNewIssue = new JButton("Issue");
 	btnNewIssue.addActionListener(new ActionListener() {
@@ -607,8 +477,7 @@ private void issue_book(DemoMember returnMember) {
 		public void actionPerformed(ActionEvent arg0) {
 
 			ArrayList<DemoBook> issuedBookList = new ArrayList<>();
-			//ArrayList<String> issuedbookNameList = (ArrayList<String>) list_2.getSelectedValuesList();
-			ArrayList<String> issuedbookNameList = (ArrayList<String>) list.getSelectedValuesList();
+			ArrayList<String> issuedbookNameList = (ArrayList<String>) list_2.getSelectedValuesList();
 			
 			ArrayList<DemoMember> activatedMemberList = memberList;
 			DemoLibrarian librarian = new DemoLibrarian();
@@ -681,17 +550,17 @@ private void issue_book(DemoMember returnMember) {
 				}
 			}
 	});
-	btnNewIssue.setBounds(90, 320, 89, 23);
+	btnNewIssue.setBounds(90, 250, 89, 23);
 	i_frame.getContentPane().add(btnNewIssue);
 	
 	issueDateField = new JTextField();
-	issueDateField.setBounds(90, 290, 86, 20);
+	issueDateField.setBounds(90, 200, 86, 20);
 	i_frame.getContentPane().add(issueDateField);
 	issueDateField.setColumns(10);
 	issueDateField.setText("MM/dd/yyyy");
 
 	JLabel lblNewLabel_4 = new JLabel("Issue Date");
-	lblNewLabel_4.setBounds(10, 280, 138, 47);
+	lblNewLabel_4.setBounds(10, 200, 138, 47);
 	i_frame.getContentPane().add(lblNewLabel_4);
     
 	
@@ -711,15 +580,14 @@ private void return_book(DemoMember returnMember) {
 	lblBookReturn.setBounds(50, 33, 74, 14);
 	return_frame.getContentPane().add(lblBookReturn);
 
-	/*JLabel lblBook_1 = new JLabel("Book");
+	JLabel lblBook_1 = new JLabel("Book");
 	lblBook_1.setBounds(10, 97, 46, 14);
-	return_frame.getContentPane().add(lblBook_1);*/
-	String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
+	return_frame.getContentPane().add(lblBook_1);
 	
-	/*JList<String> list_returnedBooks = new JList();
+	JList<String> list_returnedBooks = new JList();
 	list_returnedBooks.setSelectedIndices(new int[] { 0 });
 	list_returnedBooks.setModel(new AbstractListModel() {
-		
+		String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
 
 		public int getSize() {
 			return values.length;
@@ -731,16 +599,7 @@ private void return_book(DemoMember returnMember) {
 	});
 	list_returnedBooks.setSelectedIndex(0);
 	list_returnedBooks.setBounds(90, 68, 220, 140);
-	return_frame.getContentPane().add(list_returnedBooks);*/
-	
-	JPanel panel = new JPanel(new BorderLayout());
-    JList<String> list_returnedBooks = new JList<String>(values);
-    JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setViewportView(list_returnedBooks);
-    list_returnedBooks.setLayoutOrientation(JList.VERTICAL);
-    panel.add(scrollPane);
-    panel.setBounds(10, 80, 350, 180);
-    return_frame.add(panel);
+	return_frame.getContentPane().add(list_returnedBooks);
 
 	JLabel lblFine = new JLabel("Fine");
 	lblFine.setBounds(10, 290, 46, 14);
