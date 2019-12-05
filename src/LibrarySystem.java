@@ -3,6 +3,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -39,10 +41,10 @@ public class LibrarySystem {
     private JMenuBar mb; 
   
     // JMenu 
-    private JMenu main, admin, student, librarian, sub_student, help; 
+    private JMenu main, admin, student, instructor, librarian,  help; 
   
     // Menu items 
-    static JMenuItem inv_menu, reg_menu, issue_men, return_men; 
+    static JMenuItem inv_menu, reg_menu, issue_men, return_men, logout_men; 
 	private JTextField memberName;
 	private JTextField memberID;
 	private JTextField txtFieldRegEmail;
@@ -62,6 +64,7 @@ public class LibrarySystem {
 	private JTextField ReturnPayFineField;
 	private JPasswordField regPwdField;
 	private JPasswordField issuePasswordField;
+	private static final String data_path = Paths.get("").toAbsolutePath().toString() + "\\db\\members.dat";
 
 	/**
 	 * Launch the application.
@@ -70,10 +73,17 @@ public class LibrarySystem {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String [] users = new String[] {"admin", "librarian", "c0770339"};
-			        // Convert String Array to List
-			        List<String> user_list = Arrays.asList(users);
-					librarianLogin(user_list, "Asdf$1234");	
+					File file = new File(data_path);
+					file.delete();
+					DemoMember admin = new DemoMember("Admin1", "admin", 0,   "admin", "admin.library@cestarcollege.com");
+					DemoMember.updateMember2DB(admin);
+					DemoMember student = new DemoMember("Student1", "student", 3,   "student", "s.library@cestarcollege.com");
+					DemoMember.updateMember2DB(student);
+					DemoMember instructor = new DemoMember("Instructor 1", "instructor", 2,   "instructor", "i.library@cestarcollege.com");
+					DemoMember.updateMember2DB(instructor);
+					DemoMember librarian = new DemoMember("Librarian 1", "librarian", 1,   "librarian", "l.library@cestarcollege.com");
+					DemoMember.updateMember2DB(librarian);
+					login();	
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,104 +95,116 @@ public class LibrarySystem {
 	/**
 	 * Create the application.
 	 */
-	public LibrarySystem(String username) {
+	public LibrarySystem(DemoMember user) {
 
-		main_menu(username);
+		main_menu(user);
 		
 
 	}
 	
-		public static void librarianLogin(List<String> user_list, String pass) {
-	        
-			JFrame f=new JFrame("Cestar Library Authentication");//cr eating instance of JFrame
-	        JLabel l1,l2;  
-	        l1=new JLabel("Username");  //Create label Username
-	        l1.setBounds(30,15, 100,30); //x axis, y axis, width, height 
-	         
-	        l2=new JLabel("Password");  //Create label Password
-	        l2.setBounds(30,50, 100,30);    
-	         
-	        JTextField F_user = new JTextField(); //Create text field for username
-	        F_user.setBounds(110, 15, 200, 30);
-	             
-	        JPasswordField F_pass=new JPasswordField(); //Create text field for password
-	        F_pass.setBounds(110, 50, 200, 30);
-	           
-	        JButton login_but=new JButton("Login");//creating instance of JButton for Login Button
-	        login_but.setBounds(130,90,80,25);//Dimensions for button
-	        login_but.addActionListener(new ActionListener() {  //Perform action
-	             
-	            public void actionPerformed(ActionEvent e){ 
-	     
-	            String username = F_user.getText(); //Store username entered by the user in the variable "username"
-	            String password = F_pass.getText(); //Store password entered by the user in the variable "password"
-	             
-	            if(username.equals("")) //If username is null
-	            {
-	                JOptionPane.showMessageDialog(null,"Please enter username"); //Display dialog box with the message
-	            } 
-	            else if(password.equals("")) //If password is null
-	            {
-	                JOptionPane.showMessageDialog(null,"Please enter password"); //Display dialog box with the message
-	            }
-	            else { //If both the fields are present then to login the user, check wether the user exists already
-	                //System.out.println("Login connect");
-	                try
-	                {
-	                     if(!user_list.contains(username) || ! password.equals(pass)) { //Move pointer below
-	                      System.out.print("No user");  
-	                      JOptionPane.showMessageDialog(null,"Wrong Username/Password!"); //Display Message
-	     
-	                     }
-	                     else 
-	                     {
-	                    	 status = true;
-	                    	 f.dispose();
-	                    	 LibrarySystem window = new LibrarySystem(username);
-	 						window.frame.setVisible(true);
-	                     }
-	                	       
-	                	       //admin_menu(); //redirect to admin menu
-	                          //user_menu(UID); //redirect to user menu for that user ID
-	                     
-	                  }
-	                catch (Exception ex) {
-	                     ex.printStackTrace();
-	            }
-	            }
-	        }               
-	        });
-	        
-	     
-	         
-	        f.add(F_pass); //add password
-	        f.add(login_but);//adding button in JFrame  
-	        f.add(F_user);  //add user
-	        f.add(l1);  // add label1 i.e. for username
-	        f.add(l2); // add label2 i.e. for password
-	         
-	        f.setSize(400,180);//400 width and 500 height  
-	        f.setLayout(null);//using no layout managers  
-	        f.setVisible(true);//making the frame visible 
-	        f.setLocationRelativeTo(null);
-	         
-	    }
+	public static void login() {
+        
+		JFrame f=new JFrame("Cestar Library Authentication");//cr eating instance of JFrame
+        JLabel l1,l2;  
+        l1=new JLabel("Username");  //Create label Username
+        l1.setBounds(30,15, 100,30); //x axis, y axis, width, height 
+         
+        l2=new JLabel("Password");  //Create label Password
+        l2.setBounds(30,50, 100,30);    
+         
+        JTextField F_user = new JTextField(); //Create text field for username
+        F_user.setBounds(110, 15, 200, 30);
+             
+        JPasswordField F_pass=new JPasswordField(); //Create text field for password
+        F_pass.setBounds(110, 50, 200, 30);
+           
+        JButton login_but=new JButton("Login");//creating instance of JButton for Login Button
+        login_but.setBounds(130,90,80,25);//Dimensions for button
+        login_but.addActionListener(new ActionListener() {  //Perform action
+             
+            public void actionPerformed(ActionEvent e){ 
+     
+            String userID = F_user.getText(); //Store username entered by the user in the variable "username"
+            String password = F_pass.getText(); //Store password entered by the user in the variable "password"
+             
+            if(userID.equals("")||password.equals("")) //If username is null
+            {
+                JOptionPane.showMessageDialog(null,"Missing username/password"); //Display dialog box with the message
+            } 
+            else { //If both the fields are present then to login the user, check wether the user exists already
+                //System.out.println("Login connect");
+                try
+                {
+                	DemoMember user = DemoMember.findMemberFromDB(userID) ;
+                	if(!user.getMemberId().equalsIgnoreCase(userID) || ! user.getMemberPassword().equals(password)) { //Move pointer below
+                      JOptionPane.showMessageDialog(null,"Wrong Username/Password!"); //Display Message
+                     }
+                     else 
+                     {
+                    	 status = true;
+                    	 f.dispose();
+                    	 LibrarySystem window = new LibrarySystem(user);
+ 						window.frame.setVisible(true);
+                     }
+                	       
+                	       //admin_menu(); //redirect to admin menu
+                          //user_menu(UID); //redirect to user menu for that user ID
+                     
+                  }
+                catch (Exception ex) {
+                     ex.printStackTrace();
+            }
+            }
+        }               
+        });
+        
+     
+         
+        f.add(F_pass); //add password
+        f.add(login_but);//adding button in JFrame  
+        f.add(F_user);  //add user
+        f.add(l1);  // add label1 i.e. for username
+        f.add(l2); // add label2 i.e. for password
+         
+        f.setSize(400,180);//400 width and 500 height  
+        f.setLayout(null);//using no layout managers  
+        f.setVisible(true);//making the frame visible 
+        f.setLocationRelativeTo(null);
+         
+    }
 /**
  * Initialize the contents of the frame.
  */
-private void main_menu(String username) {
+private void main_menu(DemoMember user) {
 	populate();
+	
+	int user_role = user.getMemberType();
+	String role_str;
+	switch(user_role) 
+    { 
+        case 0: 
+        	role_str = "Admin";
+            break; 
+        case 1: 
+        	role_str = "Librarian"; 
+            break; 
+        case 2: 
+        	role_str = "Instructor"; 
+            break; 
+        case 3: 
+        	role_str = "Student"; 
+            break; 
+        default: 
+        	role_str = "Others"; 
+    }
+	
 	
 	frame = new JFrame("Cestar LMS");
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	lbl = new JLabel("Library Management System"); 
 	mb = new JMenuBar(); 
-
-    main = new JMenu("Main"); 
-    admin = new JMenu("Admin");
-    help = new JMenu("Help");
-    student = new JMenu("Student"); 
+	
 
     // create menuitems  
     inv_menu = new JMenuItem("Inventory"); 
@@ -201,7 +223,6 @@ private void main_menu(String username) {
     reg_menu.addActionListener(new ActionListener() { //Perform action
         public void actionPerformed(ActionEvent e){
              
-            JOptionPane.showMessageDialog(null,"Registration menu!"); //Open a dialog box and display the message
             register();
              
         }
@@ -209,33 +230,59 @@ private void main_menu(String username) {
     issue_men.addActionListener(new ActionListener() { //Perform action
         public void actionPerformed(ActionEvent e){
              
-            issue_book();
+            issue_book(user);
              
         }
     });
     return_men.addActionListener(new ActionListener() { //Perform action
         public void actionPerformed(ActionEvent e){
              
-            JOptionPane.showMessageDialog(null,"Return book menu!"); //Open a dialog box and display the message
-            return_book();
+            return_book(user);
              
         }
     });
-    admin.add(inv_menu);
-    admin.add(reg_menu);
-    student.add(issue_men);
+    logout_men = new JMenuItem("Logout");
+    logout_men.addActionListener(new ActionListener() { //Perform action
+        public void actionPerformed(ActionEvent e){
+             
+            JOptionPane.showMessageDialog(null,"Are you sure to logout existing user!"); //Open a dialog box and display the message
+            frame.dispose();
+            login();
+             
+        }
+    });
 
-    student.add(return_men);
-
+    main = new JMenu("Main");
+    main.add(logout_men);
+    help = new JMenu("Help");
     // add menu to menu bar 
     mb.add(main); 
-
-    mb.add(admin); 
-
     mb.add(help); 
-
-    mb.add(student); 
-
+    if(user_role == 0) {
+    	admin = new JMenu("Admin");
+        admin.add(reg_menu);
+        mb.add(admin); 
+    }
+    if(user_role == 1) { 
+    	librarian = new JMenu("Librarian");
+    	librarian.add(inv_menu);
+    	librarian.add(issue_men);
+    	librarian.add(return_men);
+    	mb.add(librarian); 
+    }
+    if(user_role == 3) { 
+	    student = new JMenu("Student"); 
+	    student.add(issue_men);
+	    student.add(return_men);
+	    mb.add(student); 
+    }
+    
+    if(user_role == 2) { 
+	    instructor = new JMenu("Instructor"); 
+	    instructor.add(issue_men);
+	    instructor.add(return_men);
+	    mb.add(instructor); 
+    }
     // add menubar to frame 
     frame.setJMenuBar(mb); 
     
@@ -246,10 +293,10 @@ private void main_menu(String username) {
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.getContentPane().setLayout(null);
 
-	JLabel lblNewLabel = new JLabel("Welome " + username.toUpperCase() + " TO LIBRARY!");
+	JLabel lblNewLabel = new JLabel("Welome " + role_str + " " + user.getMemberName().toUpperCase() + " TO LIBRARY!");
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 	lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
-	lblNewLabel.setBounds(349, 0, 306, 77);
+	lblNewLabel.setBounds(349, 0, 600, 77);
 	frame.getContentPane().add(lblNewLabel);
 
 	
@@ -286,18 +333,18 @@ private void register() {
     lblNewLabel_3.setBounds(147, 51, 64, 14);
     r_frame.getContentPane().add(lblNewLabel_3);
 
-    JLabel Type = new JLabel("Type");
+    JLabel Type = new JLabel("Role");
     Type.setBounds(30, 201, 46, 14);
     r_frame.getContentPane().add(Type);
 
     String[] user_roles = { "Admin", "Librarian", "Instructor", "Student", "Others" };
 
-    //Create the combo box, select item at index 4.
-    //Indices start at 0, so 4 specifies the pig.
-    JComboBox roleList = new JComboBox(user_roles);
+    
+    final JComboBox<String> roleList = new JComboBox<String>(user_roles);
+    roleList.setBounds(90, 201, 123, 20);
 
+    roleList.setVisible(true);
     r_frame.getContentPane().add(roleList);
-    String select_role = (String) roleList.getSelectedItem();
 
     JButton btn_register = new JButton("Submit");
     btn_register.addActionListener(new ActionListener() {
@@ -306,10 +353,6 @@ private void register() {
             boolean validType = true;
             boolean validEmail = true;
             boolean validPassword = true;
-
-            memberID.getText();
-            memberName.getText();
-
             if (!txtFieldRegEmail.getText().contains("@") || !txtFieldRegEmail.getText().contains(".")) {
                 validEmail = false;
             }
@@ -317,25 +360,45 @@ private void register() {
             if (!(regPwdField.getText().length() > 6)) {
                 validPassword = false;
             }
-
-            if (select_role.equals("Instructor")) {
-                memberTypeId = 2;
-            } else if (select_role.equals("Student")) {
-                memberTypeId = 0;
-            } else {
-                memberTypeId = 1;
-            }
             
-            DemoMember member = new DemoMember("ABC", memberID.getText(), memberTypeId,
-            regPwdField.getText(), "ABC");
+            String select_role = (String) roleList.getSelectedItem();
+            System.out.println(select_role);
+            switch(select_role) 
+            { 
+                case "Admin": 
+                	memberTypeId = 0;
+                    break; 
+                case "Librarian": 
+                	memberTypeId = 1; 
+                    break; 
+                case "Instructor": 
+                	memberTypeId = 2; 
+                    break; 
+                case "Student": 
+                	memberTypeId = 3; 
+                    break; 
+                default: 
+                	memberTypeId = 4; 
+            } 
+            
+            DemoMember member = new DemoMember( memberName.getText(), memberID.getText(), memberTypeId,
+            regPwdField.getText(), txtFieldRegEmail.getText());
 
             
 
             validEntry = member.validateEntry(memberList, member);
             // try catch implement
             if (validEntry && validType && validEmail && validPassword) {
-                memberList.add(member);
-                JOptionPane.showMessageDialog(null, "successfully activated");
+            	if(!DemoMember.validateExistingUser(memberID.getText()))
+				{
+					memberList.add(member);
+					DemoMember.updateMember2DB(member);
+					JOptionPane.showMessageDialog(null, "successfully activated");
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "User" + memberID.getText() + "already existed in DB!");
+				}
             } else if (validEntry && !validEmail) {
                 //txtFieldRegEmail.setText("");
                 JOptionPane.showMessageDialog(null, "enter a valid email ");
@@ -373,7 +436,7 @@ private void register() {
 
     
 }
-private void issue_book() {
+private void issue_book(DemoMember returnMember) {
 	
 	//JOptionPane.showMessageDialog(null,"Issue book menu!"); //Open a dialog box and display the message
     i_frame = new JFrame("Issue Book");
@@ -387,28 +450,10 @@ private void issue_book() {
 	lblBookIssue.setBounds(10, 30, 400, 63);
 	i_frame.getContentPane().add(lblBookIssue);
 
-	JLabel label = new JLabel("User ID");
-	label.setBounds(10, 128, 46, 14);
-	i_frame.getContentPane().add(label);
-
-	issueMemberIDField = new JTextField();
-	issueMemberIDField.setColumns(10);
-	issueMemberIDField.setBounds(90, 125, 86, 20);
-	i_frame.getContentPane().add(issueMemberIDField);
-
-	JLabel label_1 = new JLabel("Password");
-	label_1.setBounds(10, 175, 64, 14);
-	i_frame.getContentPane().add(label_1);
-    
-    issuePasswordField = new JPasswordField();
-	issuePasswordField.setBounds(90, 172, 84, 20);
-	i_frame.getContentPane().add(issuePasswordField);
-
 	JList<String> list_2 = new JList();
 	list_2.setSelectedIndices(new int[] { 0 });
+	String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
 	list_2.setModel(new AbstractListModel() {
-		String[] values = new String[] { "Book1", "Book2", "Book3", "Book4" };
-
 		public int getSize() {
 			return values.length;
 		}
@@ -419,11 +464,11 @@ private void issue_book() {
 	});
 
 	list_2.setSelectedIndex(0);
-	list_2.setBounds(90, 215, 180, 77);
+	list_2.setBounds(90, 80, 180, 77);
 	i_frame.getContentPane().add(list_2);
 
 	JLabel lblBook = new JLabel("Book");
-	lblBook.setBounds(10, 227, 46, 14);
+	lblBook.setBounds(10, 140, 46, 14);
 	i_frame.getContentPane().add(lblBook);
 
 	JButton btnNewIssue = new JButton("Issue");
@@ -433,8 +478,7 @@ private void issue_book() {
 
 			ArrayList<DemoBook> issuedBookList = new ArrayList<>();
 			ArrayList<String> issuedbookNameList = (ArrayList<String>) list_2.getSelectedValuesList();
-			String password = issuePasswordField.getText();
-			String memberId = issueMemberIDField.getText();
+			
 			ArrayList<DemoMember> activatedMemberList = memberList;
 			DemoLibrarian librarian = new DemoLibrarian();
 			DemoInvoice invc = null;
@@ -443,8 +487,6 @@ private void issue_book() {
 
 			
 
-			DemoMember member = DemoMember.findMember(activatedMemberList, memberId);
-
 			for (String bookName : issuedbookNameList) {
 				DemoBook Dbook = DemoBook.findBook(bookList, bookName);
 				issuedBookList.add(Dbook);
@@ -452,80 +494,73 @@ private void issue_book() {
 			
 			checkBookAvailability = DemoBook.checkBookAvailabilityForProcess(issuedBookList, bookList);
 
-			if (member != null && member.verifymember(member, password) && checkBookAvailability) {
+			if (checkBookAvailability) {
 
-				DemoPolicy policy = DemoPolicy.findPolicy(policyList, member.getMemberType());
-
-				if (invoiceList.isEmpty()) {
-					for (DemoBook issueBook : issuedBookList) {
-						try {
-							if (issueDate.contains("/")) {
-								invc = new DemoInvoice(member, policy, issueBook, librarian.getName(), issueDate);
-							} else {
-								invc = new DemoInvoice(member, policy, issueBook, librarian.getName());
-							}
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						invoiceList.add(invc);
-						bookList = DemoBook.updateBookQuantity(issueBook, bookList);
-						JOptionPane.showMessageDialog(null, "book issued " + issueBook.getBookName());
-					}
-
-					issuedBookList.clear();
-				} else {
-
-					for (DemoBook issueBook : issuedBookList) {
-						invc = DemoInvoice.checkForInvoice(invoiceList, issueBook, member);
-						if (invc == null) {
+					DemoPolicy policy = DemoPolicy.findPolicy(policyList, returnMember.getMemberType());
+	
+					if (invoiceList.isEmpty()) {
+						for (DemoBook issueBook : issuedBookList) {
 							try {
-								if (issueDate.contains("/")) {
-									invc = new DemoInvoice(member, policy, issueBook, librarian.getName(),
-											issueDate);
-								} else {
-									invc = new DemoInvoice(member, policy, issueBook, librarian.getName());
+									if (issueDate.contains("/")) {
+										invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(), issueDate);
+									} else {
+										invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName());
+									}
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 							invoiceList.add(invc);
-							JOptionPane.showMessageDialog(null, "book issued " + issueBook.getBookName());
 							bookList = DemoBook.updateBookQuantity(issueBook, bookList);
-
-						} else {
-							JOptionPane.showMessageDialog(null,
-									"Book Is Already Issued " + issueBook.getBookName());
+							JOptionPane.showMessageDialog(null, "book issued " + issueBook.getBookName());
 						}
-					}
+						issuedBookList.clear();
+					} 
+					else {
+	
+							for (DemoBook issueBook : issuedBookList) {
+								invc = DemoInvoice.checkForInvoice(invoiceList, issueBook, returnMember);
+								if (invc == null) {
+									try {
+										if (issueDate.contains("/")) {
+											invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(),
+													issueDate);
+										} else {
+											invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName());
+										}
+									} catch (ParseException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									invoiceList.add(invc);
+									JOptionPane.showMessageDialog(null, "book issued " + issueBook.getBookName());
+									bookList = DemoBook.updateBookQuantity(issueBook, bookList);
+		
+								} else {
+									JOptionPane.showMessageDialog(null,
+											"Book Is Already Issued " + issueBook.getBookName());
+								}
+							}
+							issuedBookList.clear();
+						}
+				} 
+				else{
 					issuedBookList.clear();
+					JOptionPane.showMessageDialog(null, "Book Is Not Available");
 				}
-			} else if (member == null) {
-				issuedBookList.clear();
-				JOptionPane.showMessageDialog(null, "Username Does Not Exist");
-			} else if (member != null && (!member.verifymember(member, password))) {
-				issuedBookList.clear();
-				issuePasswordField.setText("");
-				JOptionPane.showMessageDialog(null, "Password Is Incorrect");
-			} else if (!checkBookAvailability) {
-				issuedBookList.clear();
-				JOptionPane.showMessageDialog(null, "Book Is Not Available");
 			}
-
-		}
 	});
-	btnNewIssue.setBounds(90, 360, 89, 23);
+	btnNewIssue.setBounds(90, 250, 89, 23);
 	i_frame.getContentPane().add(btnNewIssue);
 	
 	issueDateField = new JTextField();
-	issueDateField.setBounds(90, 303, 86, 20);
+	issueDateField.setBounds(90, 200, 86, 20);
 	i_frame.getContentPane().add(issueDateField);
 	issueDateField.setColumns(10);
 	issueDateField.setText("MM/dd/yyyy");
 
 	JLabel lblNewLabel_4 = new JLabel("Issue Date");
-	lblNewLabel_4.setBounds(10, 291, 138, 47);
+	lblNewLabel_4.setBounds(10, 200, 138, 47);
 	i_frame.getContentPane().add(lblNewLabel_4);
     
 	
@@ -533,12 +568,12 @@ private void issue_book() {
 	
 }
 
-private void return_book() {
+private void return_book(DemoMember returnMember) {
 	return_frame = new JFrame("Return Book");
 	return_frame.setVisible(true);
 	return_frame.setBounds(0, 0, 1024, 720);
-	return_frame.pack();
-	return_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	return_frame.setSize(400, 500); 
+	//return_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	return_frame.getContentPane().setLayout(null);
     
 	JLabel lblBookReturn = new JLabel("Book Return");
@@ -548,31 +583,39 @@ private void return_book() {
 	JLabel lblBook_1 = new JLabel("Book");
 	lblBook_1.setBounds(10, 97, 46, 14);
 	return_frame.getContentPane().add(lblBook_1);
+	
+	JList<String> list_returnedBooks = new JList();
+	list_returnedBooks.setSelectedIndices(new int[] { 0 });
+	list_returnedBooks.setModel(new AbstractListModel() {
+		String[] values = convertArrList2Arr(DemoBook.getBookNameArrList(bookList));
 
-	JLabel lblMemberId = new JLabel("Member ID");
-	lblMemberId.setBounds(10, 171, 61, 14);
-	return_frame.getContentPane().add(lblMemberId);
-    
-    returnMemberIDField = new JTextField();
-	returnMemberIDField.setBounds(90, 163, 86, 20);
-	return_frame.getContentPane().add(returnMemberIDField);
-	returnMemberIDField.setColumns(10);
+		public int getSize() {
+			return values.length;
+		}
+
+		public Object getElementAt(int index) {
+			return values[index];
+		}
+	});
+	list_returnedBooks.setSelectedIndex(0);
+	list_returnedBooks.setBounds(90, 68, 220, 140);
+	return_frame.getContentPane().add(list_returnedBooks);
 
 	JLabel lblFine = new JLabel("Fine");
-	lblFine.setBounds(10, 201, 46, 14);
+	lblFine.setBounds(10, 290, 46, 14);
 	return_frame.getContentPane().add(lblFine);
     
     returnBookFineField = new JTextField();
-	returnBookFineField.setBounds(150, 200, 86, 20);
+	returnBookFineField.setBounds(150, 290, 100, 20);
 	return_frame.getContentPane().add(returnBookFineField);
 	returnBookFineField.setColumns(10);
     
     JLabel lblNewLabel_5 = new JLabel("Pay Fine");
-	lblNewLabel_5.setBounds(10, 318, 61, 14);
+	lblNewLabel_5.setBounds(10, 320, 100, 14);
 	return_frame.getContentPane().add(lblNewLabel_5);
 
 	ReturnPayFineField = new JTextField();
-	ReturnPayFineField.setBounds(150, 318, 86, 20);
+	ReturnPayFineField.setBounds(150, 320, 100, 20);
 	return_frame.getContentPane().add(ReturnPayFineField);
 	ReturnPayFineField.setColumns(10);
 
@@ -580,7 +623,6 @@ private void return_book() {
 	btnPayFine.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 
-			DemoMember returnMember = DemoMember.findMember(memberList, returnMemberIDField.getText());
 			Boolean fineValueCheck = Integer.parseInt(ReturnPayFineField.getText()) >= Integer
 					.parseInt(returnBookFineField.getText());
 
@@ -608,25 +650,10 @@ private void return_book() {
 
 		}
 	});
-	btnPayFine.setBounds(150, 360, 109, 23);
+	btnPayFine.setBounds(150, 340, 100, 23);
 	return_frame.getContentPane().add(btnPayFine);
 
-	JList<String> list_returnedBooks = new JList();
-	list_returnedBooks.setSelectedIndices(new int[] { 0 });
-	list_returnedBooks.setModel(new AbstractListModel() {
-		String[] values = new String[] { "Book1", "Book2", "Book3", "Book4" };
-
-		public int getSize() {
-			return values.length;
-		}
-
-		public Object getElementAt(int index) {
-			return values[index];
-		}
-	});
-	list_returnedBooks.setSelectedIndex(0);
-	list_returnedBooks.setBounds(90, 68, 128, 71);
-	return_frame.getContentPane().add(list_returnedBooks);
+	
 
 	JButton btnReturnBook = new JButton("Return Book");
 	btnReturnBook.addActionListener(new ActionListener() {
@@ -642,7 +669,6 @@ private void return_book() {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DemoMember returnMember = DemoMember.findMember(memberList, returnMemberIDField.getText());
 
 			for (String bookName : returnedBookNameList) {
 				DemoBook Dbook = DemoBook.findBook(bookList, bookName);
@@ -685,29 +711,59 @@ private void return_book() {
 		}
 
 	});
-	btnReturnBook.setBounds(150, 245, 109, 23);
+	btnReturnBook.setBounds(150, 260, 100, 23);
 	return_frame.getContentPane().add(btnReturnBook);
 	
 }
 
 private void populate() {
-	DemoBook book1 = new DemoBook("Book1", 2, "Cj", 123);
-	DemoBook book2 = new DemoBook("Book2", 2, "Kd", 124);
-	DemoBook book3 = new DemoBook("Book3", 2, "Cr", 125);
-	DemoBook book4 = new DemoBook("Book4", 2, "DD", 124);
+	
+	
+	DemoBook book1 = new DemoBook("Big Data Fundamentals - Data Storage Networking", 2, "Cj", 100);
+	DemoBook book2 = new DemoBook("Database Design", 2, "Kd", 101);
+	DemoBook book3 = new DemoBook("Networking Foundations", 2, "Cr", 102);
+	DemoBook book4 = new DemoBook("Virtualization", 2, "DD", 103);
+	DemoBook book5 = new DemoBook("Programming Java", 2, "DD", 104);
+	DemoBook book6 = new DemoBook("Operating Systems Foundations", 2, "DD", 105);
+	DemoBook book7 = new DemoBook("Big Data Strategies", 2, "DD", 106);
+	DemoBook book8 = new DemoBook("Server Admin 1", 2, "DD", 107);
 	bookList.add(book1);
 	bookList.add(book2);
 	bookList.add(book3);
 	bookList.add(book4);
+	bookList.add(book5);
+	bookList.add(book6);
+	bookList.add(book7);
+	bookList.add(book8);
 
-	DemoPolicy policy1 = new DemoPolicy(0, 7, 5);
-	DemoPolicy policy2 = new DemoPolicy(2, 5, 30);
-	DemoPolicy policy3 = new DemoPolicy(1, 7, 5);
+	DemoPolicy policy1 = new DemoPolicy(0, 0, 0);
+	DemoPolicy policy2 = new DemoPolicy(1, 0, 0);
+	DemoPolicy policy3 = new DemoPolicy(2, 30, 2);
+	DemoPolicy policy4 = new DemoPolicy(3, 5, 5);
+	DemoPolicy policy5 = new DemoPolicy(4, 1, 5);
+	DemoPolicy policy6 = new DemoPolicy(5, 0, 0);
 	policyList.add(policy1);
 	policyList.add(policy2);
 	policyList.add(policy3);
+	policyList.add(policy4);
+	policyList.add(policy5);
+	policyList.add(policy6);
 
 }
+
+public static String[] convertArrList2Arr(ArrayList<String> bookNameArrList) {
+	String arr[] = new String[bookNameArrList.size()]; 
+	  
+    // ArrayList to Array Conversion 
+    for (int j = 0; j < bookNameArrList.size(); j++) { 
+
+        // Assign each value to String array 
+        arr[j] = bookNameArrList.get(j); 
+    } 
+
+    return arr; 
 }
+}
+
 
 

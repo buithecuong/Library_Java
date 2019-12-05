@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class DemoBook {
 	private int bookId;
 	private String bookName;
-	private int bookQunatity;
+	private int bookQuantity;
 	private String bookAuthor;
 
 	public int getBookId() {
@@ -24,11 +24,11 @@ public class DemoBook {
 	}
 
 	public int getBookQunatity() {
-		return bookQunatity;
+		return bookQuantity;
 	}
 
 	public void setBookQunatity(int bookQunatity) {
-		this.bookQunatity = bookQunatity;
+		this.bookQuantity = bookQunatity;
 	}
 
 	public String getBookAuthor() {
@@ -38,11 +38,13 @@ public class DemoBook {
 	public void setBookAuthor(String bookAuthor) {
 		this.bookAuthor = bookAuthor;
 	}
+	
+	
 
-	public DemoBook(String bookName, int bookQunatity, String bookAuthor, int bookid) {
+	public DemoBook(String bookName, int bookQuantity, String bookAuthor, int bookid) {
 		super();
 		this.bookName = bookName;
-		this.bookQunatity = bookQunatity;
+		this.bookQuantity = bookQuantity;
 		this.bookAuthor = bookAuthor;
 		this.bookId = bookid;
 	}
@@ -55,6 +57,31 @@ public class DemoBook {
 			}
 		}
 		return null;
+	}
+	
+	public static ArrayList<String> getBookNameArrList(ArrayList<DemoBook> demoBookList) {
+		ArrayList<String> bookNameArrList = new ArrayList<String>();
+		for (DemoBook book : demoBookList) {
+			bookNameArrList.add(book.getBookName());
+		}
+		
+		return bookNameArrList; 
+	}
+	
+	
+	public static ArrayList<DemoBook> updateBookList(ArrayList<DemoBook> bookList, String[] bookNames, boolean is_remove) {
+
+		for (String name : bookNames) {
+			for (DemoBook book : bookList) {
+				if (book.getBookName().equals(name)) {
+					if (is_remove)
+						bookList.remove(bookList.indexOf(book));
+					else
+						bookList.add(book);						
+				}
+			}
+		}
+		return bookList;
 	}
 
 	public static boolean checkBookAvailabilityForProcess(ArrayList<DemoBook> issuedbookList,
