@@ -308,27 +308,35 @@ private void main_menu(DemoMember user) {
 	lblNewLabel.setBounds(349, 0, 600, 77);
 	frame.getContentPane().add(lblNewLabel);*/
 	if(user_role != 0) {
-		String [] columns = {"ID","Title","Author"};
-		
-		List<String[]> values = new ArrayList<String[]>();
-		
-	    
-	    for (DemoBook book : bookList) {
-			values.add(new String[] {String.valueOf(book.getBookId()), book.getBookName(),book.getBookAuthor()});
-		}
-		
-		
-	    TableModel tableModel = new DefaultTableModel(values.toArray(new Object[][] {}), columns);
-	    JTable table = new JTable(tableModel);
-	    frame.setLayout(new BorderLayout());
-	    table.setBounds(0, 100, 300, 300);
-	    
-	    frame.add(new JScrollPane(table), BorderLayout.CENTER);
-	
-	    frame.add(table.getTableHeader(), BorderLayout.NORTH);
-	
-	    frame.setVisible(true);
-	    frame.setSize(400,200);
+		String [] columns = {"ID","Title","Author", "Qty"};
+	    JButton btn_refesh = new JButton("Refresh");
+	    btn_refesh.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent arg0) {
+	            
+	        	List<String[]> values = new ArrayList<String[]>();
+	    		
+	    	    
+	    	    for (DemoBook book : bookList) {
+	    			values.add(new String[] {String.valueOf(book.getBookId()), book.getBookName(),book.getBookAuthor(), String.valueOf(book.getBookQuantity())});
+	    		}
+	    		
+	    		
+	    	    TableModel tableModel = new DefaultTableModel(values.toArray(new Object[][] {}), columns);
+	    	    JTable table = new JTable(tableModel);
+	    	    frame.setLayout(new BorderLayout());
+	    	    table.setBounds(0, 100, 300, 300);
+	    	    
+	    	    frame.add(new JScrollPane(table), BorderLayout.CENTER);
+	    	
+	    	    frame.add(table.getTableHeader(), BorderLayout.NORTH);
+	    	
+	    	    frame.setVisible(true);     
+
+	            
+	        }
+	    });
+	    btn_refesh.setBounds(122, 360, 89, 23);
+	    frame.getContentPane().add(btn_refesh);
 	}
 	
 
@@ -338,7 +346,7 @@ private void inventory() {
     inv_frame = new JFrame("Book Inventory");
     inv_frame.setBounds(0, 0, 512, 720);
     inv_frame.setVisible(true);
-    inv_frame.setSize(340, 450); 
+    inv_frame.setSize(340, 350); 
     inv_frame.getContentPane().setLayout(null);
 	
 	JLabel lblTitle = new JLabel("Title");
@@ -346,7 +354,7 @@ private void inventory() {
     inv_frame.getContentPane().add(lblTitle);
     
     JLabel lblID = new JLabel("Book ID");
-    lblID.setBounds(10, 50, 46, 14);
+    lblID.setBounds(10, 60, 80, 14);
     inv_frame.getContentPane().add(lblID);
     
     
@@ -358,12 +366,16 @@ private void inventory() {
     lblqty.setBounds(10, 120, 46, 14);
     inv_frame.getContentPane().add(lblqty);
     
+    JLabel lblaction = new JLabel("Action Type");
+    lblaction.setBounds(10, 180, 46, 14);
+    inv_frame.getContentPane().add(lblaction);
+    
     bookTitle = new JTextField();
     bookTitle.setBounds(90, 40, 123, 20);
     inv_frame.getContentPane().add(bookTitle);
     bookTitle.setColumns(10);
     bookID = new JTextField();
-    bookID.setBounds(90, 60, 123, 20);
+    bookID.setBounds(90, 70, 123, 20);
     inv_frame.getContentPane().add(bookID);
     bookID.setColumns(10);
 
@@ -381,7 +393,7 @@ private void inventory() {
 
     
     final JComboBox<String> actionList = new JComboBox<String>(actions);
-    actionList.setBounds(90, 201, 123, 20);
+    actionList.setBounds(90, 180, 123, 20);
 
     actionList.setVisible(true);
     inv_frame.getContentPane().add(actionList);
@@ -391,18 +403,42 @@ private void inventory() {
     btn_inv.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
             
-        	DemoBook book = new DemoBook( bookTitle.getText(), Integer.parseInt(qty.getText()),  author.getText(), Integer.parseInt(bookID.getText()));
-            //DemoBook DemoBook = new DemoBook("Business", 2, "Cj", 100);
+        	//DemoBook DemoBook = new DemoBook("Business", 2, "Cj", 100);
         	String action = (String) actionList.getSelectedItem();
+        	DemoBook existingBook =DemoBook.findBook(bookList, bookTitle.getText());
+        	DemoBook updateBook = null;
+        	DemoBook removeBook = null;
+        	if (existingBook!= null && existingBook.getBookAuthor().equalsIgnoreCase(author.getText()) ) 	{
+        		updateBook = new DemoBook( existingBook.getBookName(), Integer.parseInt(qty.getText()) + existingBook.getBookQuantity() ,  existingBook.getBookAuthor(), existingBook.getBookId());
+        		if (existingBook.getBookQuantity()> Integer.parseInt(qty.getText()))
+        				removeBook = new DemoBook( existingBook.getBookName(),  existingBook.getBookQuantity() - Integer.parseInt(qty.getText()) ,  existingBook.getBookAuthor(), existingBook.getBookId());
+        	}
+        	DemoBook newBook = new DemoBook( bookTitle.getText(), Integer.parseInt(qty.getText())  ,  author.getText(), Integer.parseInt(bookID.getText()));
+        	
             switch(action) 
             { 
                 case "Add": 
-                	bookList.add(book);  
+                	if (existingBook == null) {
+                		bookList.add(newBook);
+                	} 
+                	else {
+                		bookList.add(updateBook); 
+                	}
+                	
                 	JOptionPane.showMessageDialog(null,"Add books successfully!"); //Open a dialog box and display the message
                     break; 
                 case "Remove": 
-                	bookList.remove(bookList.indexOf(book));
+                	bookList.remove(existingBook);
+                	if (removeBook != null)
+                		bookList.add(removeBook);
                 	JOptionPane.showMessageDialog(null,"Remove books successfully!"); //Open a dialog box and display the message
+                    break; 
+                case "Update": 
+                	if (updateBook != null) {
+                		bookList.remove(existingBook);
+                	}
+                		bookList.add(newBook);
+                	JOptionPane.showMessageDialog(null,"Update books successfully!"); //Open a dialog box and display the message
                     break; 
                 default: 
                 	JOptionPane.showMessageDialog(null,"Action " + action + " is not ready for use!"); //Open a dialog box and display the message
@@ -412,7 +448,7 @@ private void inventory() {
             
         }
     });
-    btn_inv.setBounds(122, 360, 89, 23);
+    btn_inv.setBounds(122, 220, 89, 23);
     inv_frame.getContentPane().add(btn_inv);
     
     
