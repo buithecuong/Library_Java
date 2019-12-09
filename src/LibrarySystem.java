@@ -668,10 +668,11 @@ private void issue_book(DemoMember returnMember) {
 					if (invoiceList.isEmpty()) {
 						for (DemoBook issueBook : issuedBookList) {
 							try {
-									if (issueDate.contains("/")) {
-										invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(), issueDate);
-									} else {
+									if (issueDate.toString().equals("MM/dd/yyyy")) {
 										invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName());
+										
+									} else {
+										invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(), issueDate);
 									}
 								} catch (ParseException e) {
 									// TODO Auto-generated catch block
@@ -689,11 +690,11 @@ private void issue_book(DemoMember returnMember) {
 								invc = DemoInvoice.checkForInvoice(invoiceList, issueBook, returnMember);
 								if (invc == null) {
 									try {
-										if (issueDate.contains("/")) {
-											invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(),
-													issueDate);
-										} else {
+										if (issueDate.toString().equals("MM/dd/yyyy")) {
 											invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName());
+											
+										} else {
+											invc = new DemoInvoice(returnMember, policy, issueBook, librarian.getName(), issueDate);
 										}
 									} catch (ParseException e) {
 										// TODO Auto-generated catch block
