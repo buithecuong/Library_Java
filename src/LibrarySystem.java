@@ -481,6 +481,24 @@ public class LibrarySystem {
 	
 	    roleList.setVisible(true);
 	    r_frame.getContentPane().add(roleList);
+	    
+	    JLabel lblEmail = new JLabel("Email");
+	    lblEmail.setBounds(30, 275, 46, 14);
+	    r_frame.getContentPane().add(lblEmail);
+	    
+	    
+	    JTextField txtFieldRegEmail = new JTextField();
+	    txtFieldRegEmail.setBounds(90, 272, 200, 20);
+	    r_frame.getContentPane().add(txtFieldRegEmail);
+	    txtFieldRegEmail.setColumns(10);
+	
+	    JLabel lblRegPwd = new JLabel ("Password");
+	    lblRegPwd.setBounds(30, 321, 64, 14);
+	    r_frame.getContentPane().add(lblRegPwd);
+	    
+	    JPasswordField regPwdField = new JPasswordField();
+		regPwdField.setBounds(90, 318, 124, 20);
+		r_frame.getContentPane().add(regPwdField);
 	
 	    JButton btn_register = new JButton("Submit");
 	    btn_register.addActionListener(new ActionListener() {
@@ -509,23 +527,7 @@ public class LibrarySystem {
 	                default: 
 	                	memberTypeId = 4; 
 	            } 
-	            JLabel lblEmail = new JLabel("Email");
-	    	    lblEmail.setBounds(30, 275, 46, 14);
-	    	    r_frame.getContentPane().add(lblEmail);
-	    	    
-	    	    
-	    	    JTextField txtFieldRegEmail = new JTextField();
-	    	    txtFieldRegEmail.setBounds(90, 272, 200, 20);
-	    	    r_frame.getContentPane().add(txtFieldRegEmail);
-	    	    txtFieldRegEmail.setColumns(10);
-	    	
-	    	    JLabel lblRegPwd = new JLabel ("Password");
-	    	    lblRegPwd.setBounds(30, 321, 64, 14);
-	    	    r_frame.getContentPane().add(lblRegPwd);
-	    	    
-	    	    JPasswordField regPwdField = new JPasswordField();
-	    		regPwdField.setBounds(90, 318, 124, 20);
-	    		r_frame.getContentPane().add(regPwdField);
+	           
 	            
 	    		 if (!txtFieldRegEmail.getText().contains("@") || !txtFieldRegEmail.getText().contains(".")) {
 		                validEmail = false;
@@ -765,7 +767,7 @@ public class LibrarySystem {
 						for (DemoInvoice invc : invoiceList) {
 							boolean invoicesDueForFine = (invc.dateDifferenceCalculate(invc.getIssueDate(),
 									returnDate) > policy.getDaysToBorrow());
-							if (invc.getMember().equals(returnMember) && invoicesDueForFine) {
+							if (invc.getMember().getMemberId().equals(returnMember.getMemberId()) && invoicesDueForFine) {
 								invc.setIssueDate(returnDate);
 							}
 						}
